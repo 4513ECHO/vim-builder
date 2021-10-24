@@ -64,6 +64,8 @@ DEPENDS="
   'liblua5.4-dev'
   'luajit'
   'libluajit-5.1-dev'
+  'libx11-dev'
+  'xorg-dev'
 "
 
 main () {
@@ -97,11 +99,13 @@ main () {
     --enable-terminal \
     --enable-autoservername \
     --enable-multibyte \
+    --enable-xim \
     --enable-fontset \
     --enable-gpm \
     --with-features=huge \
     --with-compiledby="$NAME" \
     --with-luajit \
+    --with-x \
     | log 36 configure
 
   make install | log 32 make
