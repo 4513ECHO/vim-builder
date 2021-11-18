@@ -6,7 +6,7 @@ Usage: ./vim-builder.sh [OPTIONS]
 
 Options:
   -h --help                       show this message and exit
-  -v --vim-version <VIM_VERSION>  set vim version (default: 8.2.3560)
+  -v --vim-version <VIM_VERSION>  set vim version (default: 8.2.3616)
   -p --prefix <PREFIX>            set directory installed vim (default: /usr/local/)
   -n --name <NAME>                set "compiled by" (default: "vim-builder.sh")
 END
@@ -43,7 +43,7 @@ parse_options () {
     esac
     shift
   done
-  VIM_VERSION="${VIM_VERSION:-8.2.3560}"
+  VIM_VERSION="${VIM_VERSION:-8.2.3616}"
   NAME="${NAME:-vim-builder.sh}"
   PREFIX="${PREFIX:-/usr/local/}"
 }
@@ -99,9 +99,9 @@ main () {
     --enable-terminal \
     --enable-autoservername \
     --enable-multibyte \
-    --enable-xim \
     --enable-fontset \
     --enable-gpm \
+    --enable-gui=no \
     --with-features=huge \
     --with-compiledby="$NAME" \
     --with-luajit \
