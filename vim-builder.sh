@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 help () {
   cat <<'END'
@@ -48,7 +48,7 @@ parse_options () {
   PREFIX="${PREFIX:-/usr/local/}"
 }
 
-DEPENDS="
+DEPENDS=(
   'gettext'
   'libtinfo-dev'
   'libacl1-dev'
@@ -66,17 +66,20 @@ DEPENDS="
   'libluajit-5.1-dev'
   'libx11-dev'
   'xorg-dev'
-"
+)
 
 main () {
   parse_options "$@"
-  [ -n "$FLAG_HELP" ] && help
-  [ "$USER" != "root" ] && abort "please do 'sudo'"
+  [[ -n "$FLAG_HELP" ]] && help
+  [[ "$(whoami)" != "root" ]] && abort "please do 'sudo'"
 
   apt-get update | log 33 apt
-  apt-get install -y $(echo "$DEPENDS" | tr -d "'\n") | log 33 apt
+  apt-get install -y "${DEPENDS[@]}" | log 33 apt
 
-  if [ -d "vim-${VIM_VERSION}" ]; then
+  if [[ "$VIM_VERSION" = v* ]]; then
+    VIM_VERSION="${VIM_VERSION//v/}"
+  fi
+  if [[ -d "vim-${VIM_VERSION}" ]]; then
     rm -rf "vim-${VIM_VERSION}"
     printf "Remove directory '%s'\n" "vim-${VIM_VERSION}" | log 35 vim-builder
   fi
