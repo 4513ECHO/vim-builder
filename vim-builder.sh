@@ -43,7 +43,7 @@ parse_options () {
     esac
     shift
   done
-  VIM_VERSION="${VIM_VERSION:-8.2.3616}"
+  VIM_VERSION="${VIM_VERSION:-8.2.3978}"
   NAME="${NAME:-vim-builder.sh}"
   PREFIX="${PREFIX:-/usr/local/}"
 }
