@@ -68,51 +68,46 @@ DEPENDS=(
   'xorg-dev'
 )
 
-main () {
-  parse_options "$@"
-  [[ -n "$FLAG_HELP" ]] && help
-  [[ "$(whoami)" != "root" ]] && abort "please do 'sudo'"
+parse_options "$@"
+[[ -n "$FLAG_HELP" ]] && help
+[[ "$(whoami)" != "root" ]] && abort "please do 'sudo'"
 
-  apt-get update | log 33 apt
-  apt-get install -y "${DEPENDS[@]}" | log 33 apt
+apt-get update | log 33 apt
+apt-get install -y "${DEPENDS[@]}" | log 33 apt
 
-  if [[ "$VIM_VERSION" = v* ]]; then
-    VIM_VERSION="${VIM_VERSION//v/}"
-  fi
-  if [[ -d "vim-${VIM_VERSION}" ]]; then
-    rm -rf "vim-${VIM_VERSION}"
-    printf "Remove directory '%s'\n" "vim-${VIM_VERSION}" | log 35 vim-builder
-  fi
-  printf "Download into '%s'" "vim-${VIM_VERSION}" | log 35 vim-builder
-  curl -fsSL "https://github.com/vim/vim/archive/refs/tags/v${VIM_VERSION}.tar.gz" \
-    | tar zxf -
-  printf "change directory to src\n" | log 35 vim-builder
-  cd "vim-${VIM_VERSION}/src" || abort "fail to change direcoty"
+if [[ "$VIM_VERSION" = v* ]]; then
+  VIM_VERSION="${VIM_VERSION//v/}"
+fi
+if [[ -d "vim-${VIM_VERSION}" ]]; then
+  rm -rf "vim-${VIM_VERSION}"
+  printf "Remove directory '%s'\n" "vim-${VIM_VERSION}" | log 35 vim-builder
+fi
+printf "Download into '%s'" "vim-${VIM_VERSION}" | log 35 vim-builder
+curl -fsSL "https://github.com/vim/vim/archive/refs/tags/v${VIM_VERSION}.tar.gz" \
+  | tar zxf -
+printf "change directory to src\n" | log 35 vim-builder
+cd "vim-${VIM_VERSION}/src" || abort "fail to change direcoty"
 
-  ./configure \
-    --prefix="$PREFIX" \
-    --enable-fail-if-missing \
-    --enable-luainterp=dynamic \
-    --enable-perlinterp=dynamic \
-    --enable-pythoninterp=dynamic \
-    --enable-python3interp=dynamic \
-    --enable-tclinterp=dynamic \
-    --enable-rubyinterp=dynamic \
-    --enable-cscope \
-    --enable-terminal \
-    --enable-autoservername \
-    --enable-multibyte \
-    --enable-fontset \
-    --enable-gpm \
-    --enable-gui=no \
-    --with-features=huge \
-    --with-compiledby="$NAME" \
-    --with-luajit \
-    --with-x \
-    | log 36 configure
+./configure \
+  --prefix="$PREFIX" \
+  --enable-fail-if-missing \
+  --enable-luainterp=dynamic \
+  --enable-perlinterp=dynamic \
+  --enable-pythoninterp=dynamic \
+  --enable-python3interp=dynamic \
+  --enable-tclinterp=dynamic \
+  --enable-rubyinterp=dynamic \
+  --enable-cscope \
+  --enable-terminal \
+  --enable-autoservername \
+  --enable-multibyte \
+  --enable-fontset \
+  --enable-gpm \
+  --enable-gui=no \
+  --with-features=huge \
+  --with-compiledby="$NAME" \
+  --with-luajit \
+  --with-x \
+  | log 36 configure
 
-  make install | log 32 make
-}
-
-main "$@" || exit 1
-
+make -j"$(nproc)" install | log 32 make
