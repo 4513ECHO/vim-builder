@@ -13,6 +13,12 @@ Options:
   -n --name <NAME>                set "compiled by" (default: "vim-builder.sh")
 ```
 
+**Note:** My useful oneliner command:
+
+```sh
+sudo ./vim-builder.sh --name "Hibiki (4513ECHO)" --vim-version "$(cd $(ghq root)/github.com/vim/vim && git pull --quiet && git describe --tags --abbrev=0)"
+```
+
 ## Lisence
 
 MIT
